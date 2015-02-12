@@ -7,7 +7,7 @@
   "author": "Cole Lawrence (@ZombieHippie)",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ZombieHippie/jade-server.git"
+    "url": "https://github.com/ZombieHippie/jade-dev.git"
   },
   "dependencies": {
     "node-static": "0.7.x",
