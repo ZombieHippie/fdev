@@ -1,13 +1,13 @@
 {
-  "name": "jade-dev",
-  "description": "a dynamic jade server w/ parse error reports and directory indexing",
+  "name": "fdev",
+  "description": "serve one file jade server, regardless of path w/ parse error reports",
   "version": "0.0.1",
-  "bin": "./jade-dev.js",
+  "bin": "./fdev.js",
   "preferGlobal": "true",
   "author": "Cole Lawrence (@ZombieHippie)",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ZombieHippie/jade-dev.git"
+    "url": "https://github.com/ZombieHippie/fdev.git"
   },
   "dependencies": {
     "node-static": "0.7.x",
