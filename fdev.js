@@ -5,22 +5,26 @@ var fs = require('fs')
   , static = require('node-static')
   , pathUtil =require('path')
   , jadeRe = /\.jade$/
-  , path = process.argv.slice(2)[0]
-  , port = parseInt(process.argv.slice(2)[1]) || 8080
+  , fileRe = /\.\w+$/
+  , fileServed = process.argv.slice(2)[0]
+  , path = process.argv.slice(2)[1]
+  , port = parseInt(process.argv.slice(2)[2]) || 8080
   , fileServer = new static.Server(path || '.')
 
 if (path)
   process.chdir(pathUtil.resolve(path));
 
-fileServer.serveDir = function (pathname, req, res, finish) {
-  fs.readdir(pathname, function(err, results) {
-    res.writeHead(200, {'Content-Type': 'text/html'})
-    res.end(jade.render('pre\n if pathname.length\n  a(href="../") ..\n  br\n each file in results\n  a(href=pathname+"\/"+file)=file\n  br', {
-      results: results,
-      pathname: req.url.length === 1 ? '' : req.url
-    }))
-    finish(200, {})
-  })
+var fContents;
+if (!fileServed)
+  return console.error("insufficient arguments", "expected:", process.argv.join(" ") + " <filename>")
+else {
+  if (jadeRe.test(fileServed))
+    fContents = jade.renderFile('.' + req.url, {
+        filename: '.' + fileServed.replace(jadeRe, ''),
+        pretty: true
+      })
+  else
+    fContents = fs.readFileSync(fileServed, "utf8")
 }
 
 http.createServer(function (req, res) {
@@ -34,9 +38,14 @@ http.createServer(function (req, res) {
     } catch (parseError) {
       res.end('<pre>' + parseError + '</pre>')
     }
-  } else {
+  } else if (req.url.match(fileRe)) {
     req.addListener('end', function () {
       fileServer.serve(req, res)
     }).resume()
+  } else {
+    res.writeHead(200, {'Content-Type': 'text/html'})
+	res.end(fContents);
   }
 }).listen(port)
+
+console.log("server runnning on localhost:" + port)
